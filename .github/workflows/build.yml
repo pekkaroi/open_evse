@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - stable
+      - master
   pull_request:
 
 jobs:
@@ -18,11 +18,11 @@ jobs:
 
   build_platform_io:
     name: Build using PlatformIO
-    uses: OpenEVSE/open_evse/.github/workflows/build_platformio.yml@stable
+    uses: OpenEVSE/open_evse/.github/workflows/build_platformio.yml@master
 
   build_arduino:
     name: Build using Arduino
-    uses: OpenEVSE/open_evse/.github/workflows/build_arduino.yml@stable
+    uses: OpenEVSE/open_evse/.github/workflows/build_arduino.yml@master
 
   release:
     name: Create pre-release
@@ -30,6 +30,6 @@ jobs:
     needs:
       - build_platform_io
       - build_arduino
-    if: github.ref == 'refs/heads/stable'
+    if: github.ref == 'refs/heads/master'
 
-    uses: OpenEVSE/open_evse/.github/workflows/release.yml@stable
+    uses: OpenEVSE/open_evse/.github/workflows/release.yml@master
