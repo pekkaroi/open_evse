@@ -36,9 +36,6 @@ jobs:
           - env: emonevse
             python: 3.x
             platformio: 6.1.5 
-          - env: emonevse_3ph
-            python: 3.x
-            platformio: 6.1.5 
 
     steps:
     - uses: actions/checkout@v2
