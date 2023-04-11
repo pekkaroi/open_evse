@@ -2,7 +2,7 @@
 /*
  * Open EVSE Firmware
  *
- * Copyright (c) 2011-2021 Sam C. Lin
+ * Copyright (c) 2011-2023 Sam C. Lin
  * Copyright (c) 2011-2014 Chris Howell <chris1howell@msn.com>
  * timer code Copyright (c) 2013 Kevin L <goldserve1@hotmail.com>
  * portions Copyright (c) 2014-2015 Nick Sayer <nsayer@kfu.com>
@@ -263,25 +263,6 @@ void wdt_init(void)
 
 
 #ifdef TEMPERATURE_MONITORING
-#ifdef TEMPERATURE_MONITORING_NY
-void TempMonitor::LoadThresh()
-{
-  m_ambient_thresh = eeprom_read_word((uint16_t *)EOFS_THRESH_AMBIENT);
-  if (m_ambient_thresh == 0xffff) {
-    m_ambient_thresh = TEMPERATURE_AMBIENT_THROTTLE_DOWN;
-  }
-  m_ir_thresh = eeprom_read_word((uint16_t *)EOFS_THRESH_IR);
-  if (m_ir_thresh == 0xffff) {
-    m_ir_thresh = TEMPERATURE_INFRARED_THROTTLE_DOWN;
-  }
-}
-
-void TempMonitor::SaveThresh()
-{
-  eeprom_write_word((uint16_t *)EOFS_THRESH_AMBIENT,m_ambient_thresh);
-  eeprom_write_word((uint16_t *)EOFS_THRESH_IR,m_ir_thresh);
-}
-#endif // TEMPERATURE_MONITORING_NY
 
 void TempMonitor::Init()
 {
@@ -1783,8 +1764,8 @@ Menu *RTCMenuDay::Select()
 RTCMenuYear::RTCMenuYear()
 {
 }
-#define YEAR_MIN 18
-#define YEAR_MAX 28
+#define YEAR_MIN 23
+#define YEAR_MAX 33
 void RTCMenuYear::Init()
 {
   g_OBD.LcdPrint_P(0,g_psRTC_Year);
@@ -2476,11 +2457,12 @@ uint8_t StateTransitionReqFunc(uint8_t curPilotState,uint8_t newPilotState,uint8
       retEvseState = EVSE_STATE_A;
     }
   }
-  else { // EVSE_STATE_A
+  /*  else { // EVSE_STATE_A
     // reset back to default max current
     uint8_t amps = g_EvseController.GetMaxCurrentCapacity();
     g_EvseController.SetCurrentCapacity(amps,0,1);
   }
+  */
   //  Serial.print(" r: ");Serial.print(retEvseState);Serial.print(" a: ");Serial.print(g_ACCController.GetCurAmps());
   //  Serial.print(" c: ");Serial.print(curEvseState);Serial.print(" n: ");Serial.print(newEvseState);Serial.print(" r: ");Serial.print(retEvseState);
 
@@ -2505,11 +2487,21 @@ void setup()
   g_EvseController.SetStateTransitionReqFunc(&StateTransitionReqFunc);
 #endif //PP_AUTO_AMPACITY
 
-  EvseReset();
-
 #ifdef TEMPERATURE_MONITORING
   g_TempMonitor.Init();
 #endif
+
+  EvseReset();
+
+#ifdef BOOTLOCK
+#ifdef LCD16X2
+  g_OBD.LcdMsg_P(PSTR("Waiting for"),PSTR("Initialization.."));
+#endif // LCD16X2
+  while (g_EvseController.IsBootLocked()) {
+    ProcessInputs();
+  }
+#endif // BOOTLOCK
+
 
   WDT_ENABLE();
 }  // setup()
