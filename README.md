@@ -24,7 +24,7 @@ TODO: add notes about USA OpenEVSE
 EmonEVSE (non-tethered type-2 EVSE unit)
 
 - `PP_AUTO_AMPACITY` enabled to set max current based on non-tethered cable connected
-- Three-phase option with `THREEPHASE` enabled to calculate three-phase energy
+- Three-phase option with `THREEPHASE` enabled to calculate three-phase energy ( Unneeded with ESP32_WiFi firmware >= 4.2
 
 ## API Documentation
 
