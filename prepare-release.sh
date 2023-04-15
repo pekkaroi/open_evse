@@ -4,11 +4,11 @@
 
 pio run -e emonevse
 pio run -e openevse
-pio run -e emonevse-3ph
+pio run -e emonevse_eu
 
 cp .pio/build/emonevse/firmware.hex emonevse.hex
 cp .pio/build/openevse/firmware.hex openevse.hex
-cp .pio/build/emonevse-3ph/firmware.hex emonevse-3ph.hex
+cp .pio/build/openevse_eu/firmware.hex openevse_eu.hex
 ls *.hex
 
 echo "Done" 

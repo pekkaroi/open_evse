@@ -49,7 +49,7 @@
 #define clrBits(flags,bits) (flags &= ~(bits))
 
 #ifndef VERSION
-#define VERSION "8.2.1"
+#define VERSION "8.2.3"
 #endif // !VERSION
 
 #include "Language_default.h"   //Default language should always be included as bottom layer
