@@ -1,7 +1,7 @@
 /*
  * This file is part of Open EVSE.
  *
- * Copyright (c) 2011-2021 Sam C. Lin
+ * Copyright (c) 2011-2023 Sam C. Lin
  *
  * Open EVSE is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -169,7 +169,7 @@ void J1772EVSEController::SaveSettings()
   else {
     dest = (uint8_t *)EOFS_CURRENT_CAPACITY_L2;
   }
-  eeprom_write_byte(dest, GetCurrentCapacity());
+  eeprom_write_byte(dest, GetMaxCurrentCapacity());
   SaveEvseFlags();
 }
 
@@ -309,6 +309,7 @@ void J1772EVSEController::chargingOn()
   }
   else {
     m_AccumulatedChargeTime += m_ElapsedChargeTime;
+    m_ElapsedChargeTime = 0;
   }
 
   m_ChargeOnTimeMS = millis();
@@ -609,6 +610,16 @@ uint8_t J1772EVSEController::GetMaxCurrentCapacity()
   if ((ampacity == 0xff) || (ampacity == 0)) {
     ampacity = (svclvl == 1) ? DEFAULT_CURRENT_CAPACITY_L1 : DEFAULT_CURRENT_CAPACITY_L2;
   }
+
+#ifdef PP_AUTO_AMPACITY
+  if ((m_EvseState >= EVSE_STATE_B) && (m_EvseState <= EVSE_STATE_C)) {
+    uint8_t ppamps =  g_ACCController.GetPPMaxAmps();
+    if (ppamps < ampacity) {
+      ampacity = ppamps;
+    }
+  }
+#endif // PP_AUTO_AMPACITY
+
   
   if (ampacity < MIN_CURRENT_CAPACITY_J1772) {
     ampacity = MIN_CURRENT_CAPACITY_J1772;
@@ -1077,6 +1088,10 @@ void J1772EVSEController::Init()
 #endif
 
   m_wVFlags = ECVF_DEFAULT;
+
+#ifdef BOOTLOCK
+  m_wVFlags |= ECVF_BOOT_LOCK;
+#endif
 
   m_MaxHwCurrentCapacity = eeprom_read_byte((uint8_t*)EOFS_MAX_HW_CURRENT_CAPACITY);
   if (!m_MaxHwCurrentCapacity || (m_MaxHwCurrentCapacity == (uint8_t)0xff)) {
