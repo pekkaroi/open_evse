@@ -34,7 +34,7 @@ If you already have Atom or VS Code installed you can just install the [Atom pac
 ### Arduino IDE
 
 <div class="alert alert-success">
-Note: These following instrictions have been extracted from Google Code and are not complete/properly edited
+Note: These following instructions have been extracted from Google Code and are not complete/properly edited
 </div>
 
 The Arduino IDE includes an code editor, serial monitor, and will compile and upload your code to the OpenEVSE.
