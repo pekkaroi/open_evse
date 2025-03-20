@@ -510,7 +510,7 @@ void OnboardDisplay::Update(int8_t updmode)
 
   uint8_t curstate = g_EvseController.GetState();
 #ifdef LCD16X2
-  uint8_t svclvl = g_EvseController.GetCurSvcLevel();
+//  uint8_t svclvl = g_EvseController.GetCurSvcLevel();
   int currentcap = g_EvseController.GetCurrentCapacity();
 #endif
   unsigned long curms = millis();
@@ -525,7 +525,8 @@ void OnboardDisplay::Update(int8_t updmode)
     }
 
 #ifdef LCD16X2
-    sprintf(g_sTmp,g_sRdyLAstr,(int)svclvl,currentcap);
+    sprintf(g_sTmp,g_sRdyLAstr,(int)g_EvseController.GetNumPhases(),currentcap);
+
 #endif
     switch(curstate) {
     case EVSE_STATE_A: // not connected
@@ -551,7 +552,7 @@ void OnboardDisplay::Update(int8_t updmode)
 #endif //#ifdef DELAYTIMER
       LcdPrint_P(g_psReady);
       LcdPrint(10,0,g_sTmp);
-      
+
 #ifdef KWH_RECORDING 
       sprintf(g_sTmp,STRF_WH,(g_EnergyMeter.GetSessionWs() / 3600) );
       LcdPrint(0,1,g_sTmp);
@@ -596,7 +597,7 @@ void OnboardDisplay::Update(int8_t updmode)
 #endif //#ifdef DELAYTIMER
       LcdPrint_P(g_psEvConnected);
       LcdPrint(10,0,g_sTmp);
-      
+     
 #ifdef KWH_RECORDING
       sprintf(g_sTmp,STRF_WH,(g_EnergyMeter.GetSessionWs() / 3600) );
       LcdPrint(0,1,g_sTmp);
@@ -634,6 +635,9 @@ void OnboardDisplay::Update(int8_t updmode)
       // n.b. blue LED is on
 #ifdef AMMETER
       SetAmmeterDirty(1); // force ammeter update code below
+#else 
+      sprintf(g_sTmp,g_sRdyLAstr,(int)g_EvseController.GetNumPhasesUsed(),currentcap);
+      LcdPrint(10,0,g_sTmp);
 #endif // AMMETER
       break;
     case EVSE_STATE_D: // vent required
@@ -930,7 +934,7 @@ void OnboardDisplay::Update(int8_t updmode)
       g_sTmp[10]=' ';
       sprintf(g_sTmp+11,g_sHHMMfmt,currentTime.hour(),currentTime.minute());
 #endif //RTC
-      LcdPrint(1,g_sTmp);
+      LcdPrint(0,1,g_sTmp);
 #endif // KWH_RECORDING
 #ifdef TEMPERATURE_MONITORING
       }

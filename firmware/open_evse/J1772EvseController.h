@@ -155,6 +155,12 @@ class J1772EVSEController {
 #ifdef CHARGINGAC_REG
   DigitalPin pinChargingAC;
 #endif
+#ifdef CHARGINGAC3P_REG
+  DigitalPin pinChargingAC3P;
+#endif
+#ifdef CHARGINGAC1P_REG
+  DigitalPin pinChargingAC1P;
+#endif
 #ifdef ACLINE1_REG
   DigitalPin pinAC1;
 #endif
@@ -195,6 +201,10 @@ class J1772EVSEController {
   time_t m_ElapsedChargeTime;
   time_t m_ElapsedChargeTimePrev;
   time_t m_AccumulatedChargeTime;
+
+  //Phase switching
+  uint8_t m_NumPhases;
+  uint8_t m_NumPhasesUsed; //This changes only when chargingOn happens. Cannot change during charging.
 #ifdef STATE_TRANSITION_REQ_FUNC
   EvseStateTransitionReqFunc m_StateTransitionReqFunc;
 #endif // STATE_TRANSITION_REQ_FUNC
@@ -334,6 +344,15 @@ public:
   }
   uint8_t GetMaxCurrentCapacity();
   int SetCurrentCapacity(uint8_t amps,uint8_t updatelcd=0,uint8_t nosave=0);
+
+  uint8_t GetNumPhases() { 
+    return m_NumPhases; 
+  }
+  uint8_t GetNumPhasesUsed() { 
+    return m_NumPhasesUsed; 
+  }
+  
+  int SetNumPhases(uint8_t phases, uint8_t updatelcd=0);
 
   time_t GetElapsedChargeTime() { 
     return m_ElapsedChargeTime+m_AccumulatedChargeTime; 

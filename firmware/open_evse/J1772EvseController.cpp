@@ -301,6 +301,19 @@ void J1772EVSEController::chargingOn()
     pinChargingAC.write(1);
 #endif
 
+#ifdef CHARGINGAC3P_REG
+  if (m_NumPhases > 1)  {
+    pinChargingAC3P.write(1);
+    m_NumPhasesUsed = 3;
+  }
+#endif
+#ifdef CHARGINGAC1P_REG
+  if (m_NumPhases <= 1)  {
+    pinChargingAC1P.write(1);
+    m_NumPhasesUsed = 1;
+  }
+#endif
+
   setVFlags(ECVF_CHARGING_ON);
   
   if (vFlagIsSet(ECVF_SESSION_ENDED)) {
@@ -341,6 +354,14 @@ void J1772EVSEController::chargingOff()
 
 #ifdef CHARGINGAC_REG
   pinChargingAC.write(0);
+#endif
+
+#ifdef CHARGINGAC3P_REG
+  pinChargingAC3P.write(0);
+#endif
+
+#ifdef CHARGINGAC1P_REG
+  pinChargingAC1P.write(0);
 #endif
 
   clrVFlags(ECVF_CHARGING_ON);
@@ -943,7 +964,8 @@ void J1772EVSEController::Init()
 
   m_EvseState = EVSE_STATE_UNKNOWN;
   m_PrevEvseState = EVSE_STATE_UNKNOWN;
-
+  m_NumPhases = 3;
+  m_NumPhasesUsed = 0;
   // read settings from EEPROM
   uint16_t rflgs = eeprom_read_word((uint16_t*)EOFS_FLAGS);
 
@@ -981,8 +1003,11 @@ void J1772EVSEController::Init()
 #ifdef OEV6
   }
 #endif
-#ifdef CHARGINGAC_REG
-  pinChargingAC.init(CHARGINGAC_REG,CHARGINGAC_IDX,DigitalPin::OUT);
+#ifdef CHARGINGAC3P_REG
+  pinChargingAC3P.init(CHARGINGAC3P_REG,CHARGINGAC3P_IDX,DigitalPin::OUT);
+#endif
+#ifdef CHARGINGAC1P_REG
+  pinChargingAC1P.init(CHARGINGAC1P_REG,CHARGINGAC1P_IDX,DigitalPin::OUT);
 #endif
 #ifdef ACLINE1_REG
   pinAC1.init(ACLINE1_REG,ACLINE1_IDX,DigitalPin::INP_PU);
@@ -2075,6 +2100,17 @@ int J1772EVSEController::SetCurrentCapacity(uint8_t amps,uint8_t updatelcd,uint8
   return rc;
 }
 
+int J1772EVSEController::SetNumPhases(uint8_t phases,uint8_t updatelcd)
+{
+  if(phases < 3) m_NumPhases = 1;
+  else m_NumPhases = 3;
+  
+  if (updatelcd) {
+    g_OBD.Update(OBD_UPD_FORCE);
+  }
+
+  return m_NumPhases;
+}
 #ifdef HEARTBEAT_SUPERVISION
 //Set the interval to 0 to suspend Heartbeat Supervision
 int J1772EVSEController::HeartbeatSupervision(uint16_t interval, uint8_t amps) {

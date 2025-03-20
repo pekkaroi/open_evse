@@ -49,7 +49,7 @@
 #define clrBits(flags,bits) (flags &= ~(bits))
 
 #ifndef VERSION
-#define VERSION "8.2.3"
+#define VERSION "8.2.3 PERO"
 #endif // !VERSION
 
 #include "Language_default.h"   //Default language should always be included as bottom layer
@@ -170,30 +170,30 @@ extern AutoCurrentCapacityController g_ACCController;
 #endif // OPENEVSE_2
 
 // GFI support
-#define GFI
+//#define GFI
 
 // If you loop a wire from the third GFI pin through the CT a few times and then to ground,
 // enable this. ADVPWR must also be defined.
-#define GFI_SELFTEST
+//#//define GFI_SELFTEST
 
 // behavior specified by UL
 // 1) if enabled, POST failure will cause a hard fault until power cycled.
 //    disabled, will retry POST continuously until it passes
 // 2) if enabled, any a fault occurs immediately after charge is initiated,
 //    hard fault until power cycled. Otherwise, do the standard delay/retry sequence
-#define UL_COMPLIANT
+//#define UL_COMPLIANT
 
 #ifdef UL_COMPLIANT
-#define ADVPWR
-#define GFI
+//#define ADVPWR
+//#define GFI
 // if enabled, do GFI self test before closing relay
-#define UL_GFI_SELFTEST
-#define GFI_SELFTEST
+//#define UL_GFI_SELFTEST
+//#define GFI_SELFTEST
 #endif //UL_COMPLIANT
 
 #define TEMPERATURE_MONITORING  // Temperature monitoring support
 
-#define HEARTBEAT_SUPERVISION // Heartbeat Supervision support
+//#define HEARTBEAT_SUPERVISION // Heartbeat Supervision support
 
 #ifdef AMMETER
 
@@ -230,12 +230,12 @@ extern AutoCurrentCapacityController g_ACCController;
 #endif //AMMETER
 
 //Adafruit RGBLCD (MCP23017) - can have RGB or monochrome backlight
-#define RGBLCD
+//#define RGBLCD
 
 //select default LCD backlight mode. can be overridden w/CLI/RAPI
 #define BKL_TYPE_MONO 0
 #define BKL_TYPE_RGB  1
-#define DEFAULT_LCD_BKL_TYPE BKL_TYPE_RGB
+#define DEFAULT_LCD_BKL_TYPE BKL_TYPE_MONO
 //#define DEFAULT_LCD_BKL_TYPE BKL_TYPE_MONO
 
 // Adafruit LCD backpack in I2C mode (MCP23008)
@@ -259,7 +259,7 @@ extern AutoCurrentCapacityController g_ACCController;
 // How to use 1-button menu
 // Long press activates menu
 // When within menus, short press cycles menu items, long press selects and exits current submenu
-#define BTN_MENU
+//#define BTN_MENU
 
 // take out basic setup stuff that the user really shouldn't be changing,
 // which can be set via RAPI/WiFi module.. reclaims a lot of code space
@@ -278,7 +278,7 @@ extern AutoCurrentCapacityController g_ACCController;
 
 // Option for RTC and DelayTime
 // REQUIRES HARDWARE RTC: DS1307 or DS3231 connected via I2C
-#define RTC // enable RTC & timer functions
+#//define RTC // enable RTC & timer functions
 
 #ifdef RTC
 // Option for Delay Timer - GoldServe
@@ -347,7 +347,7 @@ extern AutoCurrentCapacityController g_ACCController;
 #define DEFAULT_RELAY_HOLD_PWM 255 // (0-255, where 0=0%, 255=100%
 // enables RAPI $Z0 for tuning PWM (see rapi_proc.h for $Z0 syntax)
 // PWM parameters written to/loaded from EEPROM
-#define RELAY_HOLD_DELAY_TUNING // enable Z0
+//#define RELAY_HOLD_DELAY_TUNING // enable Z0
 
 //-- end features
 
@@ -491,14 +491,22 @@ extern AutoCurrentCapacityController g_ACCController;
 #define V6_CHARGING_PIN2 6
 
 // digital Relay trigger pin
-#define CHARGING_REG &PINB
-#define CHARGING_IDX 0
+//#define CHARGING_REG &PINB
+//#define CHARGING_IDX 0
 // digital Relay trigger pin for second relay
-#define CHARGING2_REG &PIND
-#define CHARGING2_IDX 7
+//#define CHARGING2_REG &PIND
+//#define CHARGING2_IDX 7
 //digital Charging pin for AC relay
-#define CHARGINGAC_REG &PINB
-#define CHARGINGAC_IDX 1
+//#define CHARGINGAC_REG &PINB
+//#define CHARGINGAC_IDX 1
+
+//digital Charging pin for AC relay 3Phase
+#define CHARGINGAC3P_REG &PINB
+#define CHARGINGAC3P_IDX 1
+
+//digital Charging pin for AC relay 1Phase
+#define CHARGINGAC1P_REG &PIND
+#define CHARGINGAC1P_IDX 5
 
 // obsolete LED pin
 //#define RED_LED_REG &PIND
@@ -529,7 +537,7 @@ extern AutoCurrentCapacityController g_ACCController;
 
 
 
-#define SERIAL_BAUD 115200
+#define SERIAL_BAUD 38400
 
 // EEPROM offsets for settings
 #define EOFS_CURRENT_CAPACITY_L1 0 // 1 byte

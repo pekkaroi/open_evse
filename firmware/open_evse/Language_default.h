@@ -65,6 +65,7 @@
 #define STR_CONNECTED			     "Connected"
 #define STR_TEST_DISABLED		   "TEST DISABLED"
 #define STRF_L_A					     "L%d:%dA"
+#define STRF_P_A					     "%dP:%dA"
 #define STR_READY					     "Ready"
 #define STR_CHARGING				   "Charging"
 #define STRF_MAX_CURRENT			 "%s Max Current"

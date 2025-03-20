@@ -108,7 +108,7 @@ const char g_psRelayClosureFault[] PROGMEM = STR_RELAY_CLOSURE_FAULT;
 const char g_psDisabledTests[] PROGMEM = STR_TEST_DISABLED;
 #endif
 
-const char g_sRdyLAstr[] = STRF_L_A;
+const char g_sRdyLAstr[] = STRF_P_A;
 const char g_psReady[] PROGMEM = STR_READY;
 const char g_psCharging[] PROGMEM = STR_CHARGING;
 const char *g_sMaxCurrentFmt = STRF_MAX_CURRENT;

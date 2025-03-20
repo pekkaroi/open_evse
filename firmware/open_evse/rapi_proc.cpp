@@ -316,9 +316,11 @@ int EvseRapiProcessor::processCmd()
 	    echo = ((u1.u8 == '0') ? 0 : 1);
 	    break;
 #ifdef ADVPWR
+#ifdef GFI
 	  case 'F': // GFI self test
 	    g_EvseController.EnableGfiSelfTest(u1.u8);
 	    break;
+#endif //GFI
 	  case 'G': // ground check
 	    g_EvseController.EnableGndChk(u1.u8);
 	    break;
@@ -527,6 +529,17 @@ int EvseRapiProcessor::processCmd()
 	  rc = 0;
 	  break;
 #endif // ADVPWR && AUTOSVCLEVEL
+	}
+      }
+      break;
+    case 'P': // Number of Phases
+      if (tokenCnt == 2) {
+      switch(*tokens[1]) {
+	case '1':
+	case '3':
+	  g_EvseController.SetNumPhases(*tokens[1] - '0',1);
+	  rc = 0;
+	  break;
 	}
       }
       break;
@@ -747,6 +760,12 @@ int EvseRapiProcessor::processCmd()
       rc = 0;
       break;
 #endif // VOLTMETER
+    case 'N':
+      u1.i = g_EvseController.GetNumPhasesUsed();
+      sprintf(buffer,"%d",u1.i);
+      bufCnt = 1; // flag response text output
+      rc = 0;
+      break;
 #ifdef TEMPERATURE_MONITORING
 #ifdef TEMPERATURE_MONITORING_NY
     case 'O':
