@@ -13,7 +13,7 @@ jobs:
         sudo apt-get install jq -y
 
     - name: Download the built assets
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         path: artifacts
 
