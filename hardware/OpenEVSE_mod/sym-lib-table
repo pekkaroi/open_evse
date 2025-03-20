@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "ACDC")(type "Legacy")(uri "/home/pekka/Downloads/Converter_ACDC.lib")(options "")(descr ""))
+)
