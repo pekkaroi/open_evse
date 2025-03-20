@@ -1,5 +1,9 @@
 # OpenEVSE
 
+My fork has support for two contactors - one for 1 phase and one for 3 phase, and user can select the relay before starting charging. Change of the relay is forbidden during charging. To change the number of phases (to match with excess solar production), I have implemented a EspHome component connected to my OpenEvse directly with uart, and it first disables the charger (sleep), changes the relay to use, and then re-enables charge.
+
+Additionally, as I accidentially ordered AtMega 328pb chips instead of 328p for my build, I had to modify the source accordinly.
+
 Firmware for OpenEVSE controller used in OpenEVSE Charging Stations sold in the USA, and OpenEnergyMonitor EmonEVSE units sold in (UK/EU).
 
 - OpenEVSE: <https://store.openevse.com/collections/all-products>
